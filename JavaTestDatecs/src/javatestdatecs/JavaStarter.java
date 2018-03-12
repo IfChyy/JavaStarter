@@ -10,9 +10,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Main class
- * Created methods for each java starter exercise and binary exercises
- * in main method we have tests to run each separate exercise
+ * Main class Created methods for each java starter exercise and binary
+ * exercises in main method we have tests to run each separate exercise
  *
  * @author Ivo Georgiev (IfChyy)
  */
@@ -24,7 +23,7 @@ public class JavaStarter {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+      
         // Exercise One
         // System.out.println("Exercise one \n" + ExerciseOne());
         // Exercise Three

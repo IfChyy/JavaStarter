@@ -62,7 +62,7 @@ public class MyLinkedList {
     }
 
     //delete the last node after iterationg through the list
-    public static void deleteLast() {
+    public static void DeleteLast() {
         Node last = null;
 
         for (Node curr = zooList.first; curr != null; curr = curr.next) {

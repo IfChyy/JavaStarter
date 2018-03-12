@@ -62,7 +62,7 @@ public class LinkedListDriver {
           //delete last node;
          System.out.println("Delete last node");
          
-         zooList.deleteLast();
+         zooList.DeleteLast();
          System.out.println("List: " + zooList.printFirstToLast());
          
         
