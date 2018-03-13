@@ -18,7 +18,7 @@ public class TLV {
     static String tag, tagLength, value;
     static int lenDecimal;
     static HashMap<String, String> dataParsed = new HashMap<>();
-    static int count = 0, mount = 0;
+    static int count = 0, countTwo = 0;
     static ArrayList<ArrayList<String>> myList = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -44,19 +44,17 @@ public class TLV {
                 + "BBF0C28610C4F07A0000000041010870101610C4F07A000000"
                 + "0043060870103610A4F05B012345678870109";
 
-        String inputSix = "BF0C28610C4F07A0000000041010870101610C4F07A0000000043060870103610A4F05B012345678870109";
-//
+        //---------------First created method to read Ber TLV data
         //    BerTlv(inputFive);
         //  System.out.println("DATA\n" + dataParsed);
         //   System.out.println("\n");
+        //------------------------Finaly used second BerTlv2 method
+        //less code better conversion for each value
         BerTlv2(inputFive);
-//        System.out.println("DATA\n" + dataParsed);
-        System.out.println("test " + mostSignificantBit("87"));
-
+        //used double arraylist because of unknown error in adding data in hash map
         System.out.println("\n" + myList);
-        String temp = "A5";
-        System.out.println("IsConstructed :" + temp + "  " +isConstructed(temp));
-
+        //test a b5 of a hex value set to 1 or 0 
+        System.out.println(isTagConstructed(5, "BF0C"));
     }
 
     //method to get a string hex and return decimal value
@@ -66,14 +64,18 @@ public class TLV {
         // System.out.println(display + ", to decimal: " + decimal);
         return decimal;
     }
-
+    //convert hex t obinary to test for most significalt byte of tag
     public static String hexToBinary(String hexString) {
+        //convert to int
         int i = Integer.parseInt(hexString, 16);
+        //get each bit
         String binaryString = Integer.toBinaryString(i);
+        //add zero's were needed
         String padded = String.format("%8s", Integer.toBinaryString(i)).replace(' ', '0');
+        //return binary representation
         return padded;
     }
-
+     //check if hex value has b5-b1 all 1 meaning continue to next byte
     public static boolean mostSignificantBit(String binary) {
         //System.out.println(Integer.parseInt("01"));
         int temp = hexToDecimal(binary);
@@ -81,14 +83,15 @@ public class TLV {
 
         return msb == 0x1f;
     }
-    
-    public static boolean isConstructed(String binary){
-        int temp = hexToDecimal(binary);
-        int isCon = ((byte)temp & 0x1f);
-        
-        return isCon == 0x1f;
-    }
 
+    //check bit6 if its 1 or 0 eg constructed or not
+    public static boolean isTagConstructed(int position, String binary) {
+        int temp = hexToDecimal(binary);
+        int isCon = ((byte) temp >> position) & 1;
+      //  System.out.println("temp is: " + hexToBinary(binary) + " iscon: " + isCon);
+        return isCon == 1;
+    }
+    //---------------FIRST BERTLV method.. not used anymore.. kept for reference
     public static void BerTlv(String input) {
         ArrayList<String> item = new ArrayList<>();
         //  System.out.println("Count is: " + count);
@@ -146,47 +149,65 @@ public class TLV {
 
     }
 
+    
+    /******************USED BERTLV METHOD
+    * gets a data parsed by the user,
+    * then formats in in TLV format
+    * and adds all information to double array list
+    */
     public static void BerTlv2(String input) {
         ArrayList<String> item = new ArrayList<>();
         //  System.out.println("Count is: " + count);
         //if input not empty and count not equal to input's length continue
-        if (!input.equals("") && mount != input.length()) {
+        if (!input.equals("") && countTwo != input.length()) {
             //delete all spaces betweeen the input's bytes
             input = input.replaceAll("\\s+", "");
             //get the tag to be a substring of our input from 0 to 2
-            tag = input.substring(mount, mount + 2);
+            tag = input.substring(countTwo, countTwo + 2);
             //if tag's most significant bit equal to 1 the tag also contains the next byte
             //else continue with just 1 
             if (mostSignificantBit(tag.substring(0, 2))) {
-                tag = input.substring(mount, mount + 4);
-                mount += 4;
-                tagLength = input.substring(mount, mount + 2);
+                tag = input.substring(countTwo, countTwo + 4);
+                countTwo += 4;
+                tagLength = input.substring(countTwo, countTwo + 2);
             } else {
-                mount += 2;
-                if (mount == input.length()) {
+                countTwo += 2;
+                if (countTwo == input.length()) {
                     return;
                 } else {
-                    tagLength = input.substring(mount, mount + 2);
+                    tagLength = input.substring(countTwo, countTwo + 2);
                 }
             }
-            value = input.substring(mount + 2, hexToDecimal(tagLength) * 2 + mount + 2);
-            //  System.out.println("m " + mount);
-            //dataParsed.put(tag + "(" + hexToDecimal(tagLength) + ")", value);
-            if (mount + (value.length() + 2) == input.length() && mount < 5) {
+            value = input.substring(countTwo + 2, hexToDecimal(tagLength) * 2 + countTwo + 2);
 
-                mount += 2;
+            //check if count plus value length equal to the length of the input
+            //and less than 5, if true continue on the next row to find the Tag
+            
+            if (countTwo + (value.length() + 2) == input.length() && countTwo < 5) {
+
+                countTwo += 2;
                 value = "";
 
             } else {
-                //   System.out.println("VLEZE");
-               
-                    mount += (value.length() + 2);
-                
+                   // if tag b5 is 1 meaning tag is constructed, go deeper to serach for TLV data
+                   // count incremented to continue on deeper level of the parsed data
+                if ((isTagConstructed(5, tag) && isTagConstructed(5, tag.substring(0,2))) 
+                        ||( isTagConstructed(5, tag.substring(0,2)))) {
+                    countTwo += 2;
+                } else {
+                    //if tag is not constructed continue to get the value, or 
+                    //input ends
+                    countTwo += (value.length() + 2);
+                }
             }
+            //add tag, its legnth in decimal. and value to arrayList;
             item.add(tag + "(" + hexToDecimal(tagLength) + ")");
             item.add(value);
+            //add the new item to our main arrayList
             myList.add(item);
+            //print the gathered information for this cycle
             System.out.println("Tag: " + tag + " length " + tagLength + " value is :" + value);
+            //recurse the method 
             BerTlv2(input);
 
         }
