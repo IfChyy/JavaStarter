@@ -25,45 +25,53 @@ public class LinkedListDriver {
         zooList = new MyLinkedList();
         
         //create first Node
-        Node dog = new Node("dog", null);
-        
-        //add some nodes
-        zooList.first = new Node("cat", new Node("ant", dog));
+//        Node dog = new Node("dog", null);
+//        
+//        
+//        //add some nodes
+//        zooList.first = new Node("cat", new Node("ant", dog));
+
+
+        //*************13.03.2018 insertion method;
+        zooList.insertNode("zebra");
+        zooList.insertNode("mouse");
+        zooList.insertNode("bird");
+        zooList.insertNode("elephant");
         //print the initial list
         System.out.println("Initial List: " + zooList.printFirstToLast());
         
-        //add at first position
-        System.out.println("Add node monkey at first");
-        zooList.addAtFirst("monkey");
-        //list after adding at first position
-         System.out.println("List: " + zooList.printFirstToLast());
-         
-         //add item at last position
-         System.out.println("Add last node donkey");
-         zooList.addAtLast("donkey");
-         //list after adding at last position
-         System.out.println("List: " + zooList.printFirstToLast());
-         
-         //look for node dog at show its position
-         System.out.println("Looking for dog and its position: "
-                 + zooList.findNode("dog"));
-
-         //delete node "cat"
-         System.out.println("Delete Node: cat");
-         zooList.deleteNode("cat");
-         //list after deleting node cat
-         System.out.println("List: " + zooList.printFirstToLast());
-         
-         //delete first node;
-         System.out.println("Delete first node");
-         zooList.deleteFirst();
-         System.out.println("List: " + zooList.printFirstToLast());
-         
-          //delete last node;
-         System.out.println("Delete last node");
-         
-         zooList.DeleteLast();
-         System.out.println("List: " + zooList.printFirstToLast());
+//        //add at first position
+//        System.out.println("Add node monkey at first");
+//        zooList.addAtFirst("monkey");
+//        //list after adding at first position
+//         System.out.println("List: " + zooList.printFirstToLast());
+//         
+//         //add item at last position
+//         System.out.println("Add last node donkey");
+//         zooList.addAtLast("donkey");
+//         //list after adding at last position
+//         System.out.println("List: " + zooList.printFirstToLast());
+//         
+//         //look for node dog at show its position
+//         System.out.println("Looking for dog and its position: "
+//                 + zooList.findNode("dog"));
+//
+//         //delete node "cat"
+//         System.out.println("Delete Node: cat");
+//         zooList.deleteNode("cat");
+//         //list after deleting node cat
+//         System.out.println("List: " + zooList.printFirstToLast());
+//         
+//         //delete first node;
+//         System.out.println("Delete first node");
+//         zooList.deleteFirst();
+//         System.out.println("List: " + zooList.printFirstToLast());
+//         
+//          //delete last node;
+//         System.out.println("Delete last node");
+//         
+//         zooList.DeleteLast();
+//         System.out.println("List: " + zooList.printFirstToLast());
          
         
          

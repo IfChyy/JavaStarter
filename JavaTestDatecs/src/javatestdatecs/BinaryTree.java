@@ -6,8 +6,9 @@
 package javatestdatecs;
 
 /**
- * Binary Tree driver class for Binary Search tree
- * creating a binary tree and nodes
+ * Binary Tree driver class for Binary Search tree creating a binary tree and
+ * nodes
+ *
  * @author Ivo Georgiev (IfChyy)
  */
 public class BinaryTree {
@@ -32,11 +33,14 @@ public class BinaryTree {
         myTree.insert(54);
         myTree.insert(85);
         myTree.insert(35);
+        myTree.insert(58);
+        myTree.insert(76);
         //print the tree and second to max value
         myTree.printInOrder(root);
-        System.out.println("find second to max");
+        System.out.println("\nfind second to max");
         System.out.println(myTree.findSecToMax(root));
     }
+
     //print in order method iterating through the tree from left to right
     public void printInOrder(BinaryTreeNode top) {
         String output = " ";
@@ -46,11 +50,12 @@ public class BinaryTree {
             printInOrder(top.right);
         }
     }
+
     //insert method with comparable to see where to place the next value
     public void insert(Comparable value) {
         int direction = 0;
         BinaryTreeNode parent = null, curr = root;
-        
+
         for (;;) {
             //if current value is null place in root else left or right 
             if (curr == null) {
@@ -63,7 +68,7 @@ public class BinaryTree {
                     parent.right = ins;
                 }
                 return;
-            } 
+            }
             //check direction if node should go left or right using compareTo
             direction = value.compareTo(curr.value);
             if (direction == 0) {
@@ -78,18 +83,26 @@ public class BinaryTree {
         }
 
     }
+
     //find the second to max node
     public Comparable findSecToMax(BinaryTreeNode root) {
-        //check if tree is empty
+        //check if root value equal to null and return -1 or continue
         if (root == null) {
-            System.out.println("Empty tree!");
             return -1;
+        } else {
+            //if root.right not null root equal to right element and then rucurse
+            if (root.right != null) {
+
+                root = root.right;
+                //if root right is null but root left is not null go left 
+            } else if (root.right == null && root.left != null) {
+                root = root.left;
+                //if root right is null and left is null return element
+            } else {
+                return root.value;
+            }
         }
-        //check if next value of previous is null if it is this is the second to max
-        if(root.right.right == null){
-           return root.value;
-        }
-        return findSecToMax(root.right);
+        return findSecToMax(root);
     }
 
 }

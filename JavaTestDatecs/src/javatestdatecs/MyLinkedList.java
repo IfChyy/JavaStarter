@@ -91,4 +91,23 @@ public class MyLinkedList {
         }
         return output;
     }
+    
+    //*******************NEW INSERTION 13.03.2018
+    public static String insertNode(Object nodeData){
+     
+        if(zooList.first == null){
+            zooList.first =new Node(nodeData, null);
+            return "Inserted at first";
+        }else if(zooList.first != null){
+            Node last = null;
+            for(Node curr = zooList.first;  curr != null; curr = curr.next){
+                last = curr;
+            }
+            last.next = new Node(nodeData, null);
+            return "Inserted after:"  + last.data;
+             
+        }
+        
+        return "Not inserted";
+    }
 }

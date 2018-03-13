@@ -8,6 +8,7 @@ package javatestdatecs;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
+import static javatestdatecs.TLV.hexToDecimal;
 
 /**
  * Main class Created methods for each java starter exercise and binary
@@ -23,7 +24,6 @@ public class JavaStarter {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-      
         // Exercise One
         // System.out.println("Exercise one \n" + ExerciseOne());
         // Exercise Three
@@ -39,37 +39,20 @@ public class JavaStarter {
         // Exercise Nine
         // System.out.println(ExerciseNine("zashtoto"));
         // Exercise Eleven
-        //----------------------BINARY NOTATION--------------------
-        //binary notation Exercise Six
-        // type "A,B,C,D" for any of x to be 1 or 0 
-//        System.out.println("if Any is 0 for: 10101010 - "
-//                + (binaryExSix(10101010, "A") == 1 ? true : false));
-//
-//        System.out.println("if Any is 0 for: 1111111 - "
-//                + (binaryExSix(11111111, "A") == 1 ? true : false));
-//
-//        System.out.println("if Any is 1 for: 00001000 - "
-//                + (binaryExSix(00001000, "B") == 1 ? true : false));
-//
-//        System.out.println("if Any is 1 for: 00000000 - "
-//                + (binaryExSix(00000000, "B") == 1 ? true : false));
-//
-//        System.out.println("if less-significant is 1 for: 00001000 - "
-//                + (binaryExSix(00001000, "C") == 1 ? true : false));
-//
-//        System.out.println("if less-significant is 1 for: 00000001 - "
-//                + (binaryExSix(00000001, "C") == 1 ? true : false));
-//
-//        System.out.println("if most-significant is 0 for: 10001000 - "
-//                + (binaryExSix(10001000, "D") == 1 ? true : false));
-//
-//        System.out.println("if most-significant is 0 for: 00000001 - "
-//                + (binaryExSix(00000001, "D") == 1 ? true : false));
-        // Bynary exercise seven rotate left
-//        rotate_left(0x12345678, (char)4);
-//        rotate_left(0x12345678, (char)20);
-//        rotate_left(0x12345678, (char)2);
+        //---------------New edit 13.03.2018 ex Seven rotate Left
+//        String number = "12345678";
+//        int rotateBy = 2;
+//        System.out.printf("new hex: " + "%08x%n", bitwise_rotate_left(number, rotateBy));
+        //----------------------BINARY NOTATION EX SIX 13.03.2018
+
+        System.out.println(isBitSet(15, "A"));
+    //    System.out.println(MSB(7));
+        System.out.println(~~5);
     }
+    
+   static boolean check_zeros(int y) {
+    return (~y & 0xff) != 0xff;
+}
 
     /**
      * Exercise One creates a Christmas tree then reverse it upside down.
@@ -473,7 +456,54 @@ public class JavaStarter {
         return alphabetMap;
     }
 
+    //---------------New edit 13.03.2018
 //------------------------------BINARY NOTATION-----------------------
+    public static int isBitSet(int x, String typeOfX) {
+
+        if (typeOfX.equals("A")) {
+            //loop 8* length of our int times 
+            for (int i = 0; i < String.valueOf(x).length() * 8; i++) {
+                //shift right x with i times and with 1 
+                //if equal to 1 than there is number 1 in there
+                if (((x >> i) & 1) == 1) {
+                    return 1;
+                }
+                System.out.println(~x);
+            }
+        } else if (typeOfX.equals("B")) {
+            //loop 8* length of our int times 
+            for (int i = 0; i < String.valueOf(x).length() * 8; i++) {
+                //shift right x with i times and with 1 
+                //if equal to 1 than there is number 1 in there
+                if (((x >> i) & 1) == 1) {
+                    return 1;
+                }
+            }
+
+        } else if (typeOfX.equals("C")) {
+            // if x and 1111 1111  not equal to 0 
+            //then any bit of x could be 1
+            if ((x & 1) == 1) {
+                return 1;
+            }
+        } else if (typeOfX.equals("D")) {
+            /* Move first bit of 1 to highest order */
+            int msb = 1 << ((String.valueOf(x).length() * 8) - 1);
+
+        }
+
+        return 0;
+    }
+
+    public static int MSB(int n) {
+        int ndx = 0;
+        while (1 < n) {
+            n = (n >> 1);
+            ndx++;
+        }
+        return ndx;
+    }
+
     /**
      *
      * @param x the bits we are going to check
@@ -488,7 +518,7 @@ public class JavaStarter {
         for (int i = 0; i < bitArray.length; i++) {
             if (typeOfX.equals("A")) {
                 //if any bit is 0 return 1(true)
-                if (Integer.parseInt(bitArray[i]) == 0) {
+                if (((byte) x & 0xFF) == 1) {
                     return 1;
                 }
             } else if (typeOfX.equals("B")) {
@@ -512,12 +542,23 @@ public class JavaStarter {
      * Rotates a hex number by a specified value
      *
      * @param x the hex representation of "12345678"
-     * @param n with how much places to rotate left our hex
+     * @param bits with how much places to rotate left our hex
+     * @return the number in decimal after rotating bits
      */
-    public static void rotate_left(int x, char n) {
-        System.out.println("  12345678 with left rotate by: " + (int) n);
-
-        System.out.printf("new hex: " + "%08x%n", Integer.rotateLeft(x, n));
+    public static int bitwise_rotate_left(String x, int bits) {
+        //convert hex to decimal for bitwise rotating
+        int xDec = hexToDecimal(x);
+        return (xDec << bits) | (xDec >> (32 - bits));
 
     }
+
+    //method to get a string hex and return decimal value
+    public static int hexToDecimal(String display) {
+        //parse the string to integer then transform from 16 bit
+        int decimal = Integer.parseInt(display.trim(), 16);
+        // System.out.println(display + ", to decimal: " + decimal);
+        return decimal;
+    }
+    //---------------New edit 13.03.2018
+
 }
