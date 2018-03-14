@@ -45,14 +45,29 @@ public class JavaStarter {
 //        System.out.printf("new hex: " + "%08x%n", bitwise_rotate_left(number, rotateBy));
         //----------------------BINARY NOTATION EX SIX 13.03.2018
 
-        System.out.println(isBitSet(15, "A"));
-    //    System.out.println(MSB(7));
-        System.out.println(~~5);
+        //System.out.println(isBitSet(15, "A"));
+        //    System.out.println(MSB(7));
+        //System.out.println(countSetBits(15));
+//        //----------------------BINARY NOTATION EX SIX A, D 14.03.2018
+//      // BINARY SIX A - 5 has zeros = return true
+        int a = 255;
+        System.out.println("zeros in 255 :1111 1111: " + (binarySixA(a) > 0));
+        // BINARY SIX A - 15 has no zeros = return false
+        int x = 115;
+        System.out.println("zeros in 115 :0111 0011: " + (binarySixA(x) > 0));
+
+        //-----------BINARY SIX B 
+        System.out.println("1's in 155 :0111 0011: " + (binarySixB(x) > 0));
+        System.out.println("1's in 0 :0: " + (binarySixB(0) > 0));
+
+        //-----------BINARY SIX C 
+        System.out.println("get lsb from 2555: " + getLSB(2555));
+        System.out.println("get number of 1 bit's in 2555 LSB " + (binarySixB(getLSB(2555)) > 0));
+        //--------------------BINARY SIX D
+        //use helper method for binary six A to get number of zeros
+        //and if any bit is 0 
+        System.out.println("test if zeros " + (binarySixA(shiftMSB(14)) > 0));
     }
-    
-   static boolean check_zeros(int y) {
-    return (~y & 0xff) != 0xff;
-}
 
     /**
      * Exercise One creates a Christmas tree then reverse it upside down.
@@ -457,85 +472,59 @@ public class JavaStarter {
     }
 
     //---------------New edit 13.03.2018
-//------------------------------BINARY NOTATION-----------------------
-    public static int isBitSet(int x, String typeOfX) {
+//------------------------------BINARY NOTATION 14.03.2018----------------------
+    static int binarySixA(int x) {
 
-        if (typeOfX.equals("A")) {
-            //loop 8* length of our int times 
-            for (int i = 0; i < String.valueOf(x).length() * 8; i++) {
-                //shift right x with i times and with 1 
-                //if equal to 1 than there is number 1 in there
-                if (((x >> i) & 1) == 1) {
-                    return 1;
-                }
-                System.out.println(~x);
-            }
-        } else if (typeOfX.equals("B")) {
-            //loop 8* length of our int times 
-            for (int i = 0; i < String.valueOf(x).length() * 8; i++) {
-                //shift right x with i times and with 1 
-                //if equal to 1 than there is number 1 in there
-                if (((x >> i) & 1) == 1) {
-                    return 1;
-                }
-            }
-
-        } else if (typeOfX.equals("C")) {
-            // if x and 1111 1111  not equal to 0 
-            //then any bit of x could be 1
-            if ((x & 1) == 1) {
-                return 1;
-            }
-        } else if (typeOfX.equals("D")) {
-            /* Move first bit of 1 to highest order */
-            int msb = 1 << ((String.valueOf(x).length() * 8) - 1);
-
+        //if x is equal to zero return 0;
+        if (x == 0) {
+            return 0;
+            /**
+             * else check if NOT x and 1 is equal to 1 then recurse shifting 1
+             * bit right e.g x = 15 = 1111 NOT x = 0000 x AND 1 would give
+             * result back 0 meaning there are no ZEROS in the integer. if x =
+             * 14 = 1110 not x == 0001 and b1 of x(1) and 1 would be 1 meaning 1
+             * * zero present
+             */
+        } else {
+            return (~x & 1) + binarySixA(x >> 1);
         }
-
-        return 0;
     }
 
-    public static int MSB(int n) {
-        int ndx = 0;
-        while (1 < n) {
-            n = (n >> 1);
-            ndx++;
+    static int binarySixB(int x) {
+
+        //if x is equal to zero return 0;
+        if (x == 0) {
+            return 0;
+            /**
+             * else check if x and 1 is equal to 1 then recurse shifting 1 bit
+             * right e.g x = 15 = 1111 AND 1 would give result back 1 meaning
+             * there are bit 1's in the integer.
+             */
+        } else {
+            return (x & 1) + binarySixA(x >> 1);
         }
-        return ndx;
     }
 
-    /**
-     *
-     * @param x the bits we are going to check
-     * @param typeOfX the type of exercise
-     * @return 1 if true or x if false; firstly we convert the int of bits into
-     * array of strings then we check if the any of those bits corresponds to
-     * our exercise
-     */
-    public static int binaryExSix(int x, String typeOfX) {
-        String[] bitArray = Integer.toString(x).split("");
-
-        for (int i = 0; i < bitArray.length; i++) {
-            if (typeOfX.equals("A")) {
-                //if any bit is 0 return 1(true)
-                if (((byte) x & 0xFF) == 1) {
-                    return 1;
-                }
-            } else if (typeOfX.equals("B")) {
-                if (Integer.parseInt(bitArray[i]) == 1) {
-                    return 1;
-                }
-            } else if (typeOfX.equals("C")) {
-                if (Integer.parseInt(bitArray[bitArray.length - 1]) == 1) {
-                    return 1;
-                }
-            } else if (typeOfX.equals("D")) {
-                if (Integer.parseInt(bitArray[0]) == 0) {
-                    return 1;
-                }
-            }
+    //---------------------BINARY SIX D helper method
+    public static int shiftMSB(int x) {
+        //check length of x in binary
+        int length = Integer.toBinaryString(x).length();
+        /*
+        if length is bigger than 8, recurse the method shfiting 1 bit to the right
+        meaning that we are going to shift until we have up to 8 bits 
+        which is going to be the most significant byte 
+        
+         */
+        if (length > 8) {
+            return shiftMSB(x >> 1);
+        } else {
+            return x;
         }
-        return x;
+    }
+    // and any number with 255-  would return the last 8 bits
+
+    public static int getLSB(int x) {
+        return x & 255;
     }
 
     /**
