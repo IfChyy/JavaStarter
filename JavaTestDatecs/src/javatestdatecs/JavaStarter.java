@@ -66,8 +66,8 @@ public class JavaStarter {
         //--------------------BINARY SIX D
         //use helper method for binary six A to get number of zeros
         //and if any bit is 0 
-        System.out.println("test if zeros in 14 MSB" + (binarySixA(shiftMSB(14)) > 0));
-        System.out.println("test if zeros in 2514 MSB" + (binarySixA(shiftMSB(2514)) > 0));
+        System.out.println("test if zeros in 14 MSB " + (binarySixA(shiftMSB(14)) > 0));
+        System.out.println("test if zeros in 2514 MSB " + (binarySixA(shiftMSB(2514)) > 0));
     }
 
     /**
